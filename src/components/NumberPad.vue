@@ -4,7 +4,7 @@
             <Icon class="money" name="money1"/>
             <div class="outputNum">{{output}}</div>
         </div>
-        <Tags :value.sync="record.tag"/>
+        <Tags :value.sync="record.tag" :type="record.type"/>
         <div class="buttons">
             <button @click="inputContent">1</button>
             <button @click="inputContent">2</button>

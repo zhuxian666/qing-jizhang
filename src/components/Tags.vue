@@ -2,7 +2,9 @@
     <div class="tags">
         <div v-for="(val,key) in iconName"
              :key="key" class="iconWrapper"
-             @click="onSelected(key)" :class="{selected:selectedTag===key}">
+             @click="onSelected(key)"
+             :class="{selected:selectedTag===key,
+             [hash[type]]:hash[type]===hash[type],}">
             <Icon :name="key"/>
             {{val}}
         </div>
@@ -20,37 +22,27 @@
 
   @Component
   export default class Tags extends Vue {
-    iconName = {
-      fushi: '服饰', canyin: '餐饮',
-      jiaotong: '交通',
-      zhufang: '住房',
-      gouwu: '购物',
-      shenhuofuwu: '生活服务',
-      xuexi: '学习',
-      yule: '娱乐',
-      yundong: '运动',
-      lvyou: '旅游',
-      jiudian: '酒店',
-      qinzi: '亲子',
-      chongwu: '宠物',
-      yiliao: '医疗',
-      qitarenqing: '其他人情',
-      qita: '其他',
-      huaban: '红包',
-      zhuanzhang: '转账',
-
-      qitarenqingshouru: '其他人情',
-      shengyi: '生意',
-      tuikuan: '退款',
-      gongzi: '工资',
-      jiangjin: '奖金',
-      qitashouru: '其他',
-      huabanshouru: '红包',
-      zhuanzhangshouru: '转账',
-      shangjiazhuangzhang: '商家转账',
+    iconNameZ = {
+      fushi: '服饰', canyin: '餐饮', jiaotong: '交通', zhufang: '住房', gouwu: '购物', shenhuofuwu: '生活服务', xuexi: '学习',
+      yule: '娱乐', yundong: '运动', lvyou: '旅游', jiudian: '酒店', qinzi: '亲子', chongwu: '宠物', yiliao: '医疗',
+      qitarenqing: '其他人情', qita: '其他', huaban: '红包', zhuanzhang: '转账'
     };
-    @Prop({default: '服饰', type: String})
+    iconNameS = {
+      gongzi: '工资', qitarenqingshouru: '其他人情', shengyi: '生意', tuikuan: '退款',  jiangjin: '奖金',
+      qitashouru: '其他', huabanshouru: '红包', zhuanzhangshouru: '转账', shangjiazhuangzhang: '商家转账'
+    };
+    @Prop({default: 'fushi', type: String})
     readonly value!: string;
+    @Prop({default: '-', type: String})
+    readonly type!: string;
+    hash = {'-': 'zhi', '+': 'shou'};
+    get iconName() {
+      if (this.type === '+') {
+        this.selectedTag='gongzi'
+        return this.iconNameS;
+      } else {return this.iconNameZ;}
+    }
+
     selectedTag = this.value;
 
     onSelected(key: string) {
@@ -59,7 +51,7 @@
     }
 
     editTags() {
-      this.$router.push('/editDetail')
+      this.$router.push('/editDetail');
     }
   }
 </script>
@@ -91,8 +83,12 @@
             }
         }
 
-        .iconWrapper.selected {
+        .iconWrapper.selected.zhi {
             background: #3EB575;
+            color: white;
+        }
+        .iconWrapper.selected.shou {
+            background: #E9B646;
             color: white;
         }
 
