@@ -2,18 +2,23 @@
     <div class="notes">
         <label class="formItem">
             <Icon class="name" name="beizhu"/>
-            <input type="text" placeholder="在这里写点备注吧!">
+            <input type="text" :value="value"  placeholder="在这里写点备注吧!"
+            @input="onValueChange($event.target.value)">
         </label>
     </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
+  import {Component, Prop} from 'vue-property-decorator';
 
   @Component
   export default class Types extends Vue {
-
+    @Prop({default:'',type:String})
+    readonly value!: string
+    onValueChange(event: string){
+      this.$emit('update:value',event)
+    }
   }
 </script>
 

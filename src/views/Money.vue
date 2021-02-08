@@ -1,14 +1,16 @@
 <template>
       <Layout>
-            <Type/>
-            <Notes/>
-            <number-pad/>
+            <Type :value.sync="record.createAt"
+                  :type.sync="record.type"/>
+            <Notes :value.sync="record.notes"/>
+            <number-pad :type="record.type" @submit="submit"
+                        :value.sync="record.amount"/>
       </Layout>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
+  import {Component, Watch} from 'vue-property-decorator';
   import NumberPad from '@/components/NumberPad.vue';
   import Type from '@/components/Type.vue';
   import Notes from '@/components/Notes.vue';
@@ -16,6 +18,16 @@
         components: {Notes, Type, NumberPad}
   })
   export default class Money extends Vue {
+        get record(){
+              return this.$store.state.record
+        }
+     @Watch('record',{deep:true})
+        onRecordChange(val: RecordList){
+           console.log(val.type,val.amount,val.createAt,val.notes,val.tag);
+     }
+     submit(){
+           this.record.notes=''
+     }
   }
 </script>
 

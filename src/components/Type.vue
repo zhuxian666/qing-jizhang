@@ -1,27 +1,40 @@
 <template>
     <div class="types">
         <div class="type">
-            <div class="zhi" @click="select('-')" :class="type==='-'&& 'selected'">支出</div>
-            <div class="shou" @click="select('+')" :class="type==='+'&& 'selected'">收入</div>
+            <div class="zhi" @click="select('-')"
+                 :class="type==='-'&& 'selected'">支出</div>
+            <div class="shou" @click="select('+')"
+                 :class="type==='+'&& 'selected'">收入</div>
         </div>
         <label>
-            <input type="date" placeholder="时间" class="date">
+            <input type="date" :value="getT(value)"
+                   @input="onTimeChange($event.target.value)"
+                   class="date">
         </label>
     </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
+  import {Component, Prop} from 'vue-property-decorator';
+  import dayjs from 'dayjs';
 
   @Component
   export default class Notes extends Vue {
-    type = '-';
-
+    @Prop({default:'',type:String})
+    readonly value!: string
+    @Prop({default:'-',type:String})
+    readonly type!: string
     select(type: string) {
-      this.type = type;
+      this.$emit('update:type',type)
     }
+    getT(isoString: string){
+      return dayjs(isoString).format('YYYY-MM-DD')
+    }
+    onTimeChange(event: string){
+      this.$emit('update:value',event)
 
+    }
   }
 </script>
 
