@@ -6,11 +6,14 @@
             <div class="shou" @click="select('+')"
                  :class="type==='+'&& 'selected'">收入</div>
         </div>
-        <label>
-            <input type="date" :value="getT(value)"
-                   @input="onTimeChange($event.target.value)"
-                   class="date">
-        </label>
+        <template v-if="date">
+            <label>
+                <input type="date" :value="getT(value)"
+                       @input="onTimeChange($event.target.value)"
+                       class="date">
+            </label>
+        </template>
+
     </div>
 </template>
 
@@ -21,8 +24,10 @@
 
   @Component
   export default class Notes extends Vue {
+    @Prop({default:true,type:Boolean})
+    readonly date?: boolean
     @Prop({default:'',type:String})
-    readonly value!: string
+    readonly value?: string
     @Prop({default:'-',type:String})
     readonly type!: string
     select(type: string) {

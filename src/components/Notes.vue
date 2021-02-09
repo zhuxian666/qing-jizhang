@@ -2,8 +2,9 @@
     <div class="notes">
         <label class="formItem">
             <Icon class="name" name="beizhu"/>
-            <input type="text" :value="value"  placeholder="在这里写点备注吧!"
+            <input type="text" maxlength="30" v-model="msg"  placeholder="在这里写点备注吧!"
             @input="onValueChange($event.target.value)">
+            <span class="num">{{msg.length + '/30'}}</span>
         </label>
     </div>
 </template>
@@ -19,6 +20,7 @@
     onValueChange(event: string){
       this.$emit('update:value',event)
     }
+    msg = this.value
   }
 </script>
 
@@ -44,6 +46,9 @@
                 height: 8vh;
                 color: #A09E9E;
                 background: #FBFAFA;
+            }
+            .num {
+                color: #A09E9E;
             }
         }
     }

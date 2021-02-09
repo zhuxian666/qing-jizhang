@@ -22,10 +22,17 @@
               return this.$store.state.record
         }
      @Watch('record',{deep:true})
-        onRecordChange(val: RecordList){
+        onRecordChange(val: RecordItem){
            console.log(val.type,val.amount,val.createAt,val.notes,val.tag);
      }
+     created(){
+           this.$store.commit('fetchRecordList')
+           this.$store.commit('fetchTagListS')
+           this.$store.commit('fetchTagListZ')
+     }
      submit(){
+           this.$store.commit('createdRecordList',this.record)
+           this.$store.commit('saveRecordList')
            this.record.notes=''
      }
   }
