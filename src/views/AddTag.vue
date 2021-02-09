@@ -58,6 +58,7 @@
           window.alert('标签名重复了');
           return;
         }
+        console.log({name: this.value, val: this.tag.val});
         this.$store.commit('createdTagListS', {name: this.value, val: this.tag.val});
         this.$store.commit('saveTagListS');
         window.alert('添加成功');

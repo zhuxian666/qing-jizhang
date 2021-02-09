@@ -46,7 +46,10 @@
         return this.tagListZ;
       }
     }
-
+    created(){
+      this.$store.commit('fetchTagListS')
+      this.$store.commit('fetchTagListZ')
+    }
     removeTag(key: string) {
       if (this.record.type === '+') {
         this.$store.commit('removeTagListS', key);
@@ -79,7 +82,8 @@
 
     .createWrapper {
         border-top: 1px solid #EEEDED;
-        height: 7vh;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     .create {

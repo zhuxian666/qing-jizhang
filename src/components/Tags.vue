@@ -97,7 +97,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            width: 28vw;
+            width: 28%;
             margin-left: 4%;
             margin-top: 2%;
             background: #FCFCFC;

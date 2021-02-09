@@ -23,7 +23,7 @@
         }
      @Watch('record',{deep:true})
         onRecordChange(val: RecordItem){
-           console.log(val.type,val.amount,val.createAt,val.notes,val.tag);
+           console.log(val.type,val.amount,val.createAt,val.notes,val.tag.name);
      }
      created(){
            this.$store.commit('fetchRecordList')
