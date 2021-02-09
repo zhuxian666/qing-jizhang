@@ -58,6 +58,10 @@
     onIconNameChange(){
       this.selectedTag.name = Object.keys(this.iconName)[0];
     }
+    @Watch('tagLists',{immediate:true})
+    onTagListsChange(){
+      this.addSelected.val = Object.values(this.tagLists)[0];
+    }
     selectedTag = this.record.tag
      get record(){
       return this.$store.state.record
@@ -68,7 +72,6 @@
       this.$emit('update:value', this.selectedTag);
     }
     onAddSelected(key: string,val: string){
-
        this.addSelected = {name:key,val:val}
       this.$emit('update:value', this.addSelected);
 
