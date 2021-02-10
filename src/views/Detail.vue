@@ -1,19 +1,297 @@
 <template>
     <Layout>
-        明细
+        <div class="detail">
+            <div class="bar"><span><b>明细</b></span></div>
+            <div class="select">
+                <div class="typeButton">
+                    <div class="zhi" @click="type='-'">支出</div>
+                    <div class="line"></div>
+                    <div class="shou" @click="type='+'">收入</div>
+                </div>
+                <ul class="types">
+                    <li v-for="key in tagList" class="type"
+                        :key="key" @click="showCard(key)"
+                        :class="{selected:selectedItem===key}">{{key}}
+                    </li>
+                </ul>
+            </div>
+            <div class="cardList">
+                <template v-if="timeList.length">
+                    <ul class="listItem">
+                        <li class="item" v-for="(item,index) in timeList" :key="index">
+                            <ul>
+                                <div>
+                                    <h3>{{beautify(item.title)}}</h3><span class="total">￥ {{type}}{{item.total}}</span>
+                                </div>
+                                <li v-for="val in item.items" :key="val.id">
+                                    <Icon :name="val.tag.val"/>
+                                    <span class="tagName">{{val.tag.name}}</span>
+                                    <span class="notes">{{val.notes}}</span>
+                                    <span>{{val.type}}</span>
+                                    <span>{{val.amount}}</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </template>
+                <template v-else>
+                    <div class="nothing">
+                        <Icon class="none" name="none"/>
+                        没有任何记录
+                        <div class="jizhang" @click="$router.push('/money')"><b>记一笔</b></div>
+                    </div>
+                </template>
+            </div>
+        </div>
     </Layout>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
+  import {Component, Watch} from 'vue-property-decorator';
+  import clone from '@/lib/clone';
+  import dayjs from 'dayjs';
 
   @Component
   export default class Detail extends Vue {
-
+    get recordList() {
+      return this.$store.state.recordList;
+    }
+    get tagListZ() {
+      return this.$store.state.tagListZ as tagListZ;
+    }
+    get tagListS() {
+      return this.$store.state.tagListS as tagListS;
+    }
+    get tagList() {
+      if (this.type === '+') {
+        const list1 = clone(this.tagListS);
+        const list2 = Object.keys(list1);
+        list2.unshift('全部');
+        return list2;
+      } else {
+        const list1 = clone(this.tagListZ);
+        const list2 = Object.keys(list1);
+        list2.unshift('全部');
+        return list2;
+      }
+    }
+    beautify(string: string) {
+      const day = dayjs(string);
+      const now = dayjs();
+      if (day.isSame(now, 'day')) {
+        return '今天';
+      } else if (day.isSame(now.subtract(1, 'day'), 'day')) {
+        return '昨天';
+      } else if (day.isSame(now.subtract(2, 'day'), 'day')) {
+        return '前天';
+      } else if (day.isSame(now, 'year')) {
+        return day.format('M月D日');
+      } else {
+        return day.format('YYYY年M月D日');
+      }
+    }
+    created() {
+      this.$store.commit('fetchRecordList');
+      this.$store.commit('fetchTagListS');
+      this.$store.commit('fetchTagListZ');
+    }
+    type = '-';
+    selectedItem = '' || this.tagList[0];
+    add(item: string){
+      this.type=item
+      console.log(item)
+    }
+    showCard(key: string) {
+      this.selectedItem = key;
+    }
+    get group() {
+      if (this.selectedItem === this.tagList[0]) {
+        return this.recordList.filter((item: RecordItem) => {return item.type === this.type;});
+      } else {
+        return this.recordList.filter((item: RecordItem) => {return item.tag.name === this.selectedItem;});
+      }
+    }
+    @Watch('type')
+    onTypeChange() {
+      this.selectedItem = this.tagList[0];
+    }
+    get timeList() {
+      const list = clone(this.group) as RecordItem[];
+      list.sort((a, b) => {return dayjs(b.createAt).valueOf() - dayjs(a.createAt).valueOf();});
+      if (list.length === 0) {return [] as Result;}
+      const result: Result = [{title: dayjs(list[0].createAt).format('YYYY-M-D'), items: [list[0]]}];
+      for (let i = 1; i < list.length; i++) {
+        const current = list[i];
+        const last = result[result.length - 1];
+        if (dayjs(last.title).isSame(dayjs(current.createAt), 'day')) {
+          last.items.push(current);
+        } else {
+          result.push({title: dayjs(current.createAt).format('YYYY-M-D'), items: [current]});
+        }
+      }
+      result.forEach((item) => {item.total = item.items.reduce((sum, val) => {return sum += val.amount;}, 0);});
+      return result;
+    }
   }
 </script>
 
 <style lang="scss" scoped>
+    .detail {
+        .cardList {
+            background: #EEEDED;
+            height: 68vh;
+            overflow: auto;
+            width: 100%;
 
+            .listItem {
+                .item {
+                    background: #FFFFFF;
+                    display: flex;
+                    flex-direction: row;
+                    margin: 1vh;
+
+                    ul {
+                        display: flex;
+                        flex-direction: column;
+                        width: 100%;
+                        li {
+                            padding: 5px 18px;
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                            align-items: center;
+                            width: 100%;
+                            height: 8vh;
+                            border-bottom: 1px solid #EEEDED;;
+
+                            .notes {
+                                flex-grow: 1;
+                                color: #808080;
+                            }
+                            .tagName{
+                                white-space: nowrap;
+                                padding:0 10px;
+                            }
+
+                            .icon {
+                               min-width: 4vh;
+                               min-height: 4vh;
+                            }
+                        }
+
+                        div {
+                            padding: 5px 18px;
+                            background: #FCFBFB;
+                            height: 8vh;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            border-radius: 5px;
+                            h3 {
+                                font-size: 1.3rem;
+                            }
+
+                            .total {
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .nothing {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+
+            .none {
+                margin: 5vh 0 0;
+                width: 12vh;
+                height: 12vh;
+            }
+
+            .jizhang {
+                margin-top: 4vh;
+                font-size: 1rem;
+                color: #FFFFFF;
+                width: 30vw;
+                height: 8vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #3EB575;
+                border-radius: 10%/20%;
+            }
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 10vh;
+            background: #3EB575;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .select {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            color: #ffffff;
+            background: #3EB575;
+            height: 12vh;
+
+            .typeButton {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                background: #5EBF8A;
+                height: 5vh;
+                width: 35vw;
+                font-size: 1rem;
+                white-space: nowrap;
+                border-radius: 3px;
+                margin-left: 10px;
+                margin-top: 8px;
+
+                .zhi {
+                    padding: 0 16px 0 20px;
+                }
+
+                .shou {
+                    padding: 0 22px 0 16px;
+                }
+
+                .line {
+                    width: 1px;
+                    height: 3vh;
+                    background: #72C99A;
+                }
+            }
+
+            .types {
+                display: flex;
+                flex-direction: row;
+                overflow: auto;
+                flex-grow: 1;
+
+                .type {
+                    height: 100%;
+                    white-space: nowrap;
+                    padding: 2vh 4vw 0;
+                    text-align: center;
+
+                    &.selected {
+                        border-bottom: 3px solid #0E351A;
+                    }
+                }
+            }
+        }
+    }
 </style>

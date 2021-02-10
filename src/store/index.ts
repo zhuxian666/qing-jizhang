@@ -18,7 +18,13 @@ const store = new Vuex.Store({
       state.recordList = JSON.parse(window.localStorage.getItem('recordList') || '[]') as RecordItem[];
     },
     createdRecordList(state, record: RecordItem) {
-
+      let id: number = parseInt(window.localStorage.getItem('_idMax') || '0') || 0;
+      function createId() {
+        id++;
+        window.localStorage.setItem('_idMax', id.toString());
+        return id;
+      }
+      state.record.id = createId()
       const record2 = JSON.parse(JSON.stringify(record)) as RecordItem;
       state.recordList.push(record2);
       store.commit('saveRecordList');

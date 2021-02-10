@@ -49,6 +49,10 @@
     }
 
     submit() {
+      if(this.value==='全部'){
+        window.alert('输入的标签名不可用');
+        return;
+      }
       if (this.value.length === 0) {
         window.alert('输入标签啊');
         return;

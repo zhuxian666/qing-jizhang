@@ -1,4 +1,5 @@
 type RecordItem = {
+  id?: number;
   type: string;
   notes: string;
   tag: tag;
@@ -17,6 +18,11 @@ type RootState = {
   tagListS:tagListS;
   record:RecordItem;
 }
+type Result ={
+  title: string;
+  total?: number;
+  items: RecordItem[]
+}[]
 
 
 

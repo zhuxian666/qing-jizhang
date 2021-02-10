@@ -16,11 +16,13 @@
   @Component
   export default class Types extends Vue {
     @Prop({default:'',type:String})
-    readonly value!: string
+    value!: string
     onValueChange(event: string){
       this.$emit('update:value',event)
     }
-    msg = this.value
+    get msg(){
+      return this.value
+    }
   }
 </script>
 

@@ -2,7 +2,7 @@
       <Layout>
             <Type :value.sync="record.createAt"
                   :type.sync="record.type"/>
-            <Notes :value.sync="record.notes"/>
+            <Notes :value.sync="record.notes" :cleal="clear"/>
             <number-pad :type="record.type" @submit="submit"
                         :value.sync="record.amount"/>
       </Layout>
@@ -21,19 +21,16 @@
         get record(){
               return this.$store.state.record
         }
-     @Watch('record',{deep:true})
-        onRecordChange(val: RecordItem){
-           console.log(val.type,val.amount,val.createAt,val.notes,val.tag.name);
-     }
      created(){
            this.$store.commit('fetchRecordList')
            this.$store.commit('fetchTagListS')
            this.$store.commit('fetchTagListZ')
      }
+     clear = false
      submit(){
            this.$store.commit('createdRecordList',this.record)
-           this.$store.commit('saveRecordList')
            this.record.notes=''
+           this.clear=true
      }
   }
 </script>

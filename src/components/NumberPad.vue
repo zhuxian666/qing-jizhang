@@ -42,7 +42,7 @@
     get record(){
       return this.$store.state.record
     }
-    output = this.value.toString();
+    output = '0';
     hash = {'-': 'zhi', '+': 'shou'};
     selected = false
     updated(){
@@ -51,7 +51,7 @@
     inputContent(event: MouseEvent) {
       const button = event.target as HTMLButtonElement;
       const input = button.textContent as string;
-      if (this.output.length >= 13) {return;}
+      if (this.output.length >= 7) {return;}
       if (this.output === '0') {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if ('0123456789'.indexOf(input!) !== -1) {

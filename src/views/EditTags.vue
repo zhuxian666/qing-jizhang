@@ -1,10 +1,10 @@
 <template>
     <div class="editTags">
         <Type :date="false" :type.sync="record.type"/>
+        <div class="createWrapper" @click="createTag">追加新的标签
+            <Icon name="bianji" class="create"/>
+        </div>
         <ul>
-            <li class="createWrapper" @click="createTag">追加新的标签
-                <Icon name="bianji" class="create"/>
-            </li>
             <li v-for="key in Object.keys(tagList)" :key="key">
                 <div class="tag">
                     <Icon :name="tagList[key]"/>
@@ -70,20 +70,26 @@
 
 <style lang="scss" scoped>
     .editTags {
-        height: 10vh;
         display: flex;
         /*flex-direction: column;*/
         justify-content: center;
         align-items: center;
         background: #ffffff;
         position: relative;
+        flex-direction: column;
 
     }
 
     .createWrapper {
+        height: 8vh;
         border-top: 1px solid #EEEDED;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0 18px;
+        border-bottom: 1px solid #EEEDED;
+
     }
 
     .create {
@@ -106,11 +112,13 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 90vh;
+        height: 82vh;
         width: 100vw;
         position: absolute;
         background: #EEEDED;
-        top: 10vh;
+        top: 18vh;
+        overflow: auto;
+
     }
 
     li {
