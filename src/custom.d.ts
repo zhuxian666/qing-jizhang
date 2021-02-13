@@ -23,8 +23,7 @@ type Result ={
   total?: number;
   items: RecordItem[]
 }[]
-
-
+type Array = { key: string; value: number }[]
 
 
 

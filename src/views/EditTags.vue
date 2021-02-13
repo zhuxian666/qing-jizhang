@@ -1,4 +1,5 @@
 <template>
+    <Layout>
     <div class="editTags">
         <Type :date="false" :type.sync="record.type"/>
         <div class="createWrapper" @click="createTag">追加新的标签
@@ -16,6 +17,7 @@
             </li>
         </ul>
     </div>
+    </Layout>
 </template>
 
 <script lang="ts">
@@ -104,15 +106,15 @@
     }
 
     .icon {
-        width: 1.2rem;
-        height: 1.2rem;
+        width: 20px;
+        height: 20px;
     }
 
     ul {
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 82vh;
+        height: 72vh;
         width: 100vw;
         position: absolute;
         background: #EEEDED;
@@ -137,8 +139,8 @@
 
             .icon {
                 margin-right: 8px;
-                width: 1.6rem;
-                height: 1.6rem;
+                width: 22px;
+                height: 22px;
             }
         }
 

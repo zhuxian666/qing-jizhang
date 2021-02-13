@@ -19,18 +19,30 @@
                 <template v-if="timeList.length">
                     <ul class="listItem">
                         <li class="item" v-for="(item,index) in timeList" :key="index">
-                            <ul>
-                                <div>
+                            <div class="wrapper">
+                                <div class="liBar">
                                     <h3>{{beautify(item.title)}}</h3><span class="total">￥ {{type}}{{item.total}}</span>
                                 </div>
-                                <li v-for="val in item.items" :key="val.id">
-                                    <Icon :name="val.tag.val"/>
-                                    <span class="tagName">{{val.tag.name}}</span>
-                                    <span class="notes">{{val.notes}}</span>
-                                    <span>{{val.type}}</span>
-                                    <span>{{val.amount}}</span>
-                                </li>
-                            </ul>
+
+                                <v-touch v-on:panleft="swipeleft(index)"
+                                         :pan-options="{ direction: 'horizontal', threshold: 100 }"
+                                         v-on:panright="swiperight(index)" v-for="(val,index) in item.items"
+                                         :key="val.id"
+                                         class="touch">
+                                    <div class="tagName">
+                                        <Icon :name="val.tag.val"/>
+                                        <span>{{val.tag.name}}</span>
+                                    </div>
+                                    <div class="notes">{{val.notes}}</div>
+                                    <div class="amount">
+                                        <span>{{val.type}}</span>
+                                        <span>{{val.amount}}</span>
+                                    </div>
+                                    <div class="remove" ref="rm" @click="removeItem(val.id)">
+                                        <div>删除</div>
+                                    </div>
+                                </v-touch>
+                            </div>
                         </li>
                     </ul>
                 </template>
@@ -57,12 +69,15 @@
     get recordList() {
       return this.$store.state.recordList;
     }
+
     get tagListZ() {
       return this.$store.state.tagListZ as tagListZ;
     }
+
     get tagListS() {
       return this.$store.state.tagListS as tagListS;
     }
+
     get tagList() {
       if (this.type === '+') {
         const list1 = clone(this.tagListS);
@@ -76,6 +91,26 @@
         return list2;
       }
     }
+
+    swipeleft(index: number) {
+      if ((this.$refs.rm as HTMLDivElement[]).filter((item) => {return item.style.display === 'none';})) {
+        (this.$refs.rm as HTMLDivElement[]).map((item) => {return item.style.display = 'none';});
+      }
+      (this.$refs.rm as HTMLDivElement[])[index].style.display = 'block';
+    }
+    swiperight(index: number) {
+      (this.$refs.rm as HTMLDivElement[])[index].style.display = 'none';
+    }
+    // mounted() {
+    //   document.onclick = () => {
+    //     (this.$refs.rm as HTMLDivElement[]).map((item) => {return item.style.display = 'none';});
+    //   };
+    // }
+
+    removeItem(id: number) {
+      this.$store.commit('removeRecord', id);
+    }
+
     beautify(string: string) {
       const day = dayjs(string);
       const now = dayjs();
@@ -91,20 +126,24 @@
         return day.format('YYYY年M月D日');
       }
     }
+
     created() {
       this.$store.commit('fetchRecordList');
       this.$store.commit('fetchTagListS');
       this.$store.commit('fetchTagListZ');
     }
+
     type = '-';
     selectedItem = '' || this.tagList[0];
-    add(item: string){
-      this.type=item
-      console.log(item)
+
+    add(item: string) {
+      this.type = item;
     }
+
     showCard(key: string) {
       this.selectedItem = key;
     }
+
     get group() {
       if (this.selectedItem === this.tagList[0]) {
         return this.recordList.filter((item: RecordItem) => {return item.type === this.type;});
@@ -112,22 +151,24 @@
         return this.recordList.filter((item: RecordItem) => {return item.tag.name === this.selectedItem;});
       }
     }
+
     @Watch('type')
     onTypeChange() {
       this.selectedItem = this.tagList[0];
     }
+
     get timeList() {
       const list = clone(this.group) as RecordItem[];
       list.sort((a, b) => {return dayjs(b.createAt).valueOf() - dayjs(a.createAt).valueOf();});
       if (list.length === 0) {return [] as Result;}
-      const result: Result = [{title: dayjs(list[0].createAt).format('YYYY-M-D'), items: [list[0]]}];
+      const result: Result = [{title: dayjs(list[0].createAt).format('YYYY-M-DD'), items: [list[0]]}];
       for (let i = 1; i < list.length; i++) {
         const current = list[i];
         const last = result[result.length - 1];
         if (dayjs(last.title).isSame(dayjs(current.createAt), 'day')) {
           last.items.push(current);
         } else {
-          result.push({title: dayjs(current.createAt).format('YYYY-M-D'), items: [current]});
+          result.push({title: dayjs(current.createAt).format('YYYY-M-DD'), items: [current]});
         }
       }
       result.forEach((item) => {item.total = item.items.reduce((sum, val) => {return sum += val.amount;}, 0);});
@@ -142,58 +183,103 @@
             background: #EEEDED;
             height: 68vh;
             overflow: auto;
-            width: 100%;
+            width: 100vw;
+            max-width: 500px;
 
             .listItem {
                 .item {
                     background: #FFFFFF;
                     display: flex;
                     flex-direction: row;
-                    margin: 1vh;
 
-                    ul {
+                    .wrapper {
                         display: flex;
                         flex-direction: column;
                         width: 100%;
-                        li {
-                            padding: 5px 18px;
+
+                        .touch {
                             display: flex;
                             flex-direction: row;
                             justify-content: space-between;
                             align-items: center;
                             width: 100%;
-                            height: 8vh;
+                            height: 9vh;
                             border-bottom: 1px solid #EEEDED;;
+                            .remove {
+                                animation: left .5s;
+                                background: #F75855;
+                                width: 18%;
+                                height: 100%;
+                                display: none;
+                                text-align: center;
+                                @keyframes left {
+                                    0% {
+                                        transform: translate(100%, 0)
+                                    }
+                                    100% {
+                                        transform: translate(0, 0)
+                                    }
+                                }
+                                div {
+                                    color: #FFFFFF;
+                                    font-size: 14px;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            }
 
                             .notes {
-                                flex-grow: 1;
+                                width: 50%;
+                                display: flex;
+                                flex-wrap: wrap;
                                 color: #808080;
+                                overflow: auto;
+
                             }
-                            .tagName{
+
+                            .amount {
+                                display: flex;
+                                justify-content: flex-end;
+                                align-items: center;
+                                width: 20%;
+                                padding-right: 15px;
+
+                            }
+
+                            .tagName {
+                                display: flex;
+                                width: 30%;
+                                justify-content: flex-start;
+                                align-items: center;
                                 white-space: nowrap;
-                                padding:0 10px;
+                                padding: 0 12px;
                             }
 
                             .icon {
-                               min-width: 4vh;
-                               min-height: 4vh;
+                                height: 24px;
+                                width: 24px;
+                                margin-right: 5px;
                             }
                         }
 
-                        div {
-                            padding: 5px 18px;
+                        .liBar {
                             background: #FCFBFB;
                             height: 8vh;
                             display: flex;
                             justify-content: space-between;
                             align-items: center;
                             border-radius: 5px;
+                            padding: 0 18px;
+
                             h3 {
-                                font-size: 1.3rem;
+                                font-size: 20px;
                             }
 
                             .total {
-                                font-size: 1rem;
+                                font-size: 16px;
                             }
                         }
                     }
@@ -216,7 +302,7 @@
 
             .jizhang {
                 margin-top: 4vh;
-                font-size: 1rem;
+                font-size: 16px;
                 color: #FFFFFF;
                 width: 30vw;
                 height: 8vh;
@@ -235,7 +321,7 @@
             height: 10vh;
             background: #3EB575;
             color: #ffffff;
-            font-size: 1.1rem;
+            font-size: 18px;
         }
 
         .select {
@@ -254,7 +340,7 @@
                 background: #5EBF8A;
                 height: 5vh;
                 width: 35vw;
-                font-size: 1rem;
+                font-size: 16px;
                 white-space: nowrap;
                 border-radius: 3px;
                 margin-left: 10px;

@@ -6,6 +6,9 @@ import store from './store'
 import Layout from '@/components/Layout.vue';
 import Nav from '@/components/Nav.vue';
 import Icon from '@/components/Icon.vue';
+// @ts-ignore
+import VueTouch from 'vue-touch'
+Vue.use(VueTouch, {name: 'v-touch'})
 
 Vue.component('Nav',Nav)
 Vue.component('Layout',Layout)

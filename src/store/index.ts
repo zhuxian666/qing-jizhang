@@ -29,6 +29,18 @@ const store = new Vuex.Store({
       state.recordList.push(record2);
       store.commit('saveRecordList');
     },
+    removeRecord(state,id){
+      let index: number |undefined
+        for(let i=0;i<state.recordList.length;i++){
+          if(state.recordList[i].id===id){
+            index=i
+          }
+        }
+      if (index!==undefined){
+        state.recordList.splice(index,1)
+        store.commit('saveRecordList')
+      }
+    },
 
     saveTagListZ(state) {
       window.localStorage.setItem('tagListZ', JSON.stringify(state.tagListZ));

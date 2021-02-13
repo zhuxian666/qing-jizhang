@@ -1,4 +1,5 @@
 <template>
+    <Layout>
     <div class="addTag">
         <div class="title" :class="{[hash[record.type]]:true}">
             <span><b>{{title + '新标签'}}</b></span></div>
@@ -12,6 +13,7 @@
         <Tags :type.sync="record.type" :edit="false" :value.sync="tag"/>
         <div class="ok" :class="{[hash[record.type]]:true}" @click="submit"><b>确认</b></div>
     </div>
+    </Layout>
 </template>
 
 <script lang="ts">
@@ -122,7 +124,7 @@
             align-items: center;
             justify-content: center;
             height: 10vh;
-            font-size: 1.4rem;
+            font-size: 24px;
             border-bottom: 1px solid #EEEDED;
         }
 
@@ -135,13 +137,13 @@
 
             .name {
                 margin: 0 18px;
-                font-size: 1rem;
+                font-size: 16px;
             }
 
             .inputName {
                 flex-grow: 1;
                 border: none;
-                font-size: 1rem;
+                font-size: 16px;
                 background: inherit;
                 height: 8vh;
                 margin-right: 8px;

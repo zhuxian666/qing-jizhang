@@ -51,7 +51,7 @@
     inputContent(event: MouseEvent) {
       const button = event.target as HTMLButtonElement;
       const input = button.textContent as string;
-      if (this.output.length >= 7) {return;}
+      if (parseFloat(this.output)>100000){return;}
       if (this.output === '0') {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if ('0123456789'.indexOf(input!) !== -1) {
@@ -105,13 +105,13 @@
         }
 
         .money {
-            width: 1.6rem;
-            height: 1.6rem;
+            width: 25px;
+            height: 25px;
         }
 
         .outputNum {
             font-family: Consolas, monospace;
-            font-size: 2rem;
+            font-size: 32px;
         }
 
         .buttons {
