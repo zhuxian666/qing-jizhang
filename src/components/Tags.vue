@@ -89,6 +89,9 @@
         display: flex;
         flex-wrap: wrap;
         align-content: flex-start;
+        &::-webkit-scrollbar {
+            display: none;
+        }
         .iconWrapper {
             border: 1px solid #D9D9D9;
             height: 48px;

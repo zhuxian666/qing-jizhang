@@ -45,50 +45,56 @@
     get shouList() {
       return this.recordList.filter((item: RecordItem) => {return item.type === '+';});
     }
+
     get tagListZ() {
       return this.$store.state.tagListZ as tagListZ;
     }
+
     get tagListS() {
       return this.$store.state.tagListS as tagListS;
     }
-    get tagMountZ(){
-      const list = clone(this.zhiList) as RecordItem[];
-      const tag = Object.keys(clone(this.tagListZ))
-      type TagResult={title: string;total?: number;items: RecordItem[]}[]
-      const result: TagResult = [];
-       tag.forEach((item: string)=>{
-         const list1=list.filter((key)=>{return key.tag.name===item})
-         result.push({title: item , items: [...list1]})
-       })
-      result.forEach((item) => {item.total = item.items.reduce((sum, val) => {return sum += val.amount;}, 0);});
-      type Array = { key: string; value: number }[]
-       const KY: Array=[]
-      result.forEach((item)=>{
-        if(item.total){return  KY.push({key:item.title,value:item.total})
-        }
-      })
-      KY.sort((a,b)=>{return a.value-b.value})
 
-      return KY
-    }
-    get tagMountS(){
-      const list = clone(this.shouList) as RecordItem[];
-      const tag = Object.keys(clone(this.tagListS))
-      type TagResult={title: string;total?: number;items: RecordItem[]}[]
+    get tagMountZ() {
+      const list = clone(this.zhiList) as RecordItem[];
+      const tag = Object.keys(clone(this.tagListZ));
+      type TagResult = { title: string; total?: number; items: RecordItem[] }[]
       const result: TagResult = [];
-      tag.forEach((item: string)=>{
-        const list1=list.filter((key)=>{return key.tag.name===item})
-        result.push({title: item , items: [...list1]})
-      })
+      tag.forEach((item: string) => {
+        const list1 = list.filter((key) => {return key.tag.name === item;});
+        result.push({title: item, items: [...list1]});
+      });
       result.forEach((item) => {item.total = item.items.reduce((sum, val) => {return sum += val.amount;}, 0);});
       type Array = { key: string; value: number }[]
-      const KY: Array=[]
-      result.forEach((item)=>{
-        if(item.total){return  KY.push({key:item.title,value:item.total})
+      const KY: Array = [];
+      result.forEach((item) => {
+        if (item.total) {
+          return KY.push({key: item.title, value: item.total});
         }
-      })
-      KY.sort((a,b)=>{return a.value-b.value})
-      return KY
+      });
+      KY.sort((a, b) => {return a.value - b.value;});
+
+      return KY;
+    }
+
+    get tagMountS() {
+      const list = clone(this.shouList) as RecordItem[];
+      const tag = Object.keys(clone(this.tagListS));
+      type TagResult = { title: string; total?: number; items: RecordItem[] }[]
+      const result: TagResult = [];
+      tag.forEach((item: string) => {
+        const list1 = list.filter((key) => {return key.tag.name === item;});
+        result.push({title: item, items: [...list1]});
+      });
+      result.forEach((item) => {item.total = item.items.reduce((sum, val) => {return sum += val.amount;}, 0);});
+      type Array = { key: string; value: number }[]
+      const KY: Array = [];
+      result.forEach((item) => {
+        if (item.total) {
+          return KY.push({key: item.title, value: item.total});
+        }
+      });
+      KY.sort((a, b) => {return a.value - b.value;});
+      return KY;
     }
 
     chart?: ECharts;
@@ -117,10 +123,14 @@
       this.chart.setOption(this.chartOptions1, true);
       this.chart2 = echarts.init(this.$refs.wrapper2 as HTMLDivElement);
       this.chart2.setOption(this.chartOptions2, true);
-      this.chart3 = echarts.init(this.$refs.rankWrapper as HTMLDivElement);
-      this.chart3.setOption(this.chartOptions3, true);
-      this.chart4 = echarts.init(this.$refs.rankWrapper1 as HTMLDivElement);
-      this.chart4.setOption(this.chartOptions4, true);
+      if(this.tagMountZ.length!==0){
+        this.chart3 = echarts.init(this.$refs.rankWrapper as HTMLDivElement);
+        this.chart3.setOption(this.chartOptions3, true);
+      }
+      if(this.tagMountS.length!==0){
+        this.chart4 = echarts.init(this.$refs.rankWrapper1 as HTMLDivElement);
+        this.chart4.setOption(this.chartOptions4, true);
+      }
     }
 
     @Watch('options')
@@ -338,7 +348,7 @@
         },
         title: {
           text: '每日对比',
-          left:10
+          left: 10
         },
         tooltip: {
           trigger: 'axis',
@@ -348,7 +358,7 @@
         },
         toolbox: {
           show: true,
-          right:10,
+          right: 10,
           feature: {
             magicType: {show: true, type: ['line', 'bar']},
           }
@@ -401,7 +411,7 @@
     }
 
     get chartOptions3() {
-      const keysZ = this.tagMountZ.map(item => item.key)
+      const keysZ = this.tagMountZ.map(item => item.key);
       const valuesZ = this.tagMountZ.map(item => item.value);
       return {
         title: {
@@ -431,15 +441,16 @@
           {
             name: '支出',
             type: 'bar',
-            barMaxWidth : 40,
+            barMaxWidth: 40,
             color: '#3EB575',
             data: [...valuesZ]
           },
         ]
       };
     }
+
     get chartOptions4() {
-      const keysS = this.tagMountS.map(item => item.key)
+      const keysS = this.tagMountS.map(item => item.key);
       const valuesS = this.tagMountS.map(item => item.value);
       return {
         title: {
@@ -469,7 +480,7 @@
           {
             name: '收入',
             type: 'bar',
-            barMaxWidth : 40,
+            barMaxWidth: 40,
             color: '#E9B646',
             data: [...valuesS]
           }
@@ -492,7 +503,8 @@
     }
 
     .content {
-        width: 100vw;
+        width: 100%;
+        max-width: 565px;
         overflow: auto;
         height: 100%;
     }
@@ -503,17 +515,16 @@
         width: 100vw;
 
         .wrapper1 {
-            margin:30px 0;
+            margin: 30px 0;
             height: 40vh;
             padding: 3vw;
-            border-bottom: 1px solid #F5F5F5;;
+            border-bottom: 1px solid #C9C8C8;;
 
         }
 
         .chartWrapper {
             max-width: 100vw;
             overflow: auto;
-            border-bottom: 1px solid #EEEDED;;
 
             &::-webkit-scrollbar {
                 display: none;
@@ -523,8 +534,8 @@
         .wrapper2 {
             height: 40vh;
             width: 100vw;
-            border-bottom: 1px solid #F5F5F5;;
-            margin:30px 0;
+            border-bottom: 1px solid #C9C8C8;;
+            margin: 30px 0;
 
         }
 
@@ -532,24 +543,26 @@
             height: 60vh;
             width: 100vw;
             padding: 3vw;
-            border-bottom: 1px solid #F5F5F5;;
-            margin:30px 0;
+            border-bottom: 1px solid #C9C8C8;;
+            margin: 30px 0;
 
         }
+
         .rankWrapper1 {
             height: 60vh;
             width: 100vw;
             padding: 3vw;
             margin-bottom: 50px;
-            margin-top:30px;
+            margin-top: 30px;
 
         }
+
         .main {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-bottom: 1px solid #F5F5F5;;
+            border-bottom: 1px solid #C9C8C8;;
 
             .divWrapper1 {
                 display: flex;

@@ -10,7 +10,7 @@
 
   @Component
   export default class Icon extends Vue {
-    @Prop({type: String, required: true}) name!: string;
+    @Prop({type: String}) name!: string;
   }
 </script>
 

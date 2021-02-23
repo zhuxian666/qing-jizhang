@@ -101,11 +101,6 @@
     swiperight(index: number) {
       (this.$refs.rm as HTMLDivElement[])[index].style.display = 'none';
     }
-    // mounted() {
-    //   document.onclick = () => {
-    //     (this.$refs.rm as HTMLDivElement[]).map((item) => {return item.style.display = 'none';});
-    //   };
-    // }
 
     removeItem(id: number) {
       this.$store.commit('removeRecord', id);
@@ -172,6 +167,7 @@
         }
       }
       result.forEach((item) => {item.total = item.items.reduce((sum, val) => {return sum += val.amount;}, 0);});
+      result.forEach((item)=>{item.items.reverse()})
       return result;
     }
   }
@@ -185,7 +181,9 @@
             overflow: auto;
             width: 100vw;
             max-width: 500px;
-
+            &::-webkit-scrollbar {
+                display: none;
+            }
             .listItem {
                 .item {
                     background: #FFFFFF;
@@ -237,6 +235,9 @@
                                 flex-wrap: wrap;
                                 color: #808080;
                                 overflow: auto;
+                                &::-webkit-scrollbar {
+                                    display: none;
+                                }
 
                             }
 
@@ -305,6 +306,7 @@
                 font-size: 16px;
                 color: #FFFFFF;
                 width: 30vw;
+                max-width: 200px;
                 height: 8vh;
                 display: flex;
                 align-items: center;
@@ -340,6 +342,7 @@
                 background: #5EBF8A;
                 height: 5vh;
                 width: 35vw;
+                max-width: 240px;
                 font-size: 16px;
                 white-space: nowrap;
                 border-radius: 3px;
@@ -366,6 +369,9 @@
                 flex-direction: row;
                 overflow: auto;
                 flex-grow: 1;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
 
                 .type {
                     height: 100%;
@@ -374,7 +380,7 @@
                     text-align: center;
 
                     &.selected {
-                        border-bottom: 3px solid #0E351A;
+                        border-bottom: 2px solid #0E351A;
                     }
                 }
             }

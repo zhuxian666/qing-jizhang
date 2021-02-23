@@ -10,6 +10,10 @@ const store = new Vuex.Store({
       tagListS:{},
       record: {type: '-', notes: '', amount: 0, tag: {name: '服饰', val: 'fushi'}, createAt: (new Date().toISOString())},
     }  as RootState,
+  getters:{
+
+  },
+
   mutations: {
     saveRecordList(state) {
       window.localStorage.setItem('recordList', JSON.stringify(state.recordList));
