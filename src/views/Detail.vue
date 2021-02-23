@@ -340,9 +340,8 @@
                 justify-content: space-between;
                 align-items: center;
                 background: #5EBF8A;
-                height: 5vh;
-                width: 35vw;
-                max-width: 240px;
+                height: 4.5vh;
+                width: 150px;
                 font-size: 16px;
                 white-space: nowrap;
                 border-radius: 3px;
@@ -380,7 +379,7 @@
                     text-align: center;
 
                     &.selected {
-                        border-bottom: 2px solid #0E351A;
+                        border-bottom: 3px solid #0E351A;
                     }
                 }
             }

@@ -15,8 +15,8 @@
                     <div class="wrapper2" ref="wrapper2"></div>
                 </div>
                 <div class="wrapper1" ref="wrapper1"></div>
-                <div class="rankWrapper" ref="rankWrapper"></div>
-                <div class="rankWrapper1" ref="rankWrapper1"></div>
+                <div v-if="this.tagMountZ.length!==0" class="rankWrapper" ref="rankWrapper"></div>
+                <div v-if="this.tagMountS.length!==0" class="rankWrapper1" ref="rankWrapper1"></div>
             </div>
         </div>
     </Layout>
