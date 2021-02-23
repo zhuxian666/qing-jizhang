@@ -23,23 +23,24 @@
                                 <div class="liBar">
                                     <h3>{{beautify(item.title)}}</h3><span class="total">￥ {{type}}{{item.total}}</span>
                                 </div>
-
-                                <v-touch v-on:panleft="swipeleft(index)"
-                                         :pan-options="{ direction: 'horizontal', threshold: 100 }"
-                                         v-on:panright="swiperight(index)" v-for="(val,index) in item.items"
+                                <v-touch v-for="val in item.items"
+                                         v-on:panleft="swipeleft(val)"
+                                         v-on:panright="swiperight(val)"
                                          :key="val.id"
                                          class="touch">
-                                    <div class="tagName">
-                                        <Icon :name="val.tag.val"/>
-                                        <span>{{val.tag.name}}</span>
-                                    </div>
-                                    <div class="notes">{{val.notes}}</div>
-                                    <div class="amount">
-                                        <span>{{val.type}}</span>
-                                        <span>{{val.amount}}</span>
-                                    </div>
-                                    <div class="remove" ref="rm" @click="removeItem(val.id)">
-                                        <div>删除</div>
+                                    <div class="touchContent" :ref="'touch-'+ val.id">
+                                        <div class="tagName">
+                                            <Icon :name="val.tag.val"/>
+                                            <span>{{val.tag.name}}</span>
+                                        </div>
+                                        <div class="notes">{{val.notes}}</div>
+                                        <div class="amount">
+                                            <span>{{val.type}}</span>
+                                            <span>{{val.amount}}</span>
+                                        </div>
+                                        <div class="remove" @click="removeItem(val.id)">
+                                            <div>删除</div>
+                                        </div>
                                     </div>
                                 </v-touch>
                             </div>
@@ -92,16 +93,12 @@
       }
     }
 
-    swipeleft(index: number) {
-      if ((this.$refs.rm as HTMLDivElement[]).filter((item) => {return item.style.display === 'none';})) {
-        (this.$refs.rm as HTMLDivElement[]).map((item) => {return item.style.display = 'none';});
-      }
-      (this.$refs.rm as HTMLDivElement[])[index].style.display = 'block';
+    swipeleft(val: RecordItem) {
+        (this.$refs['touch-'+ val.id] as HTMLDivElement[])[0].style.transform='translateX(-20vw)'
     }
-    swiperight(index: number) {
-      (this.$refs.rm as HTMLDivElement[])[index].style.display = 'none';
+    swiperight(val: RecordItem) {
+        (this.$refs['touch-'+ val.id] as HTMLDivElement[])[0].style.transform='none'
     }
-
     removeItem(id: number) {
       this.$store.commit('removeRecord', id);
     }
@@ -167,7 +164,7 @@
         }
       }
       result.forEach((item) => {item.total = item.items.reduce((sum, val) => {return sum += val.amount;}, 0);});
-      result.forEach((item)=>{item.items.reverse()})
+      result.forEach((item) => {item.items.reverse();});
       return result;
     }
   }
@@ -181,9 +178,11 @@
             overflow: auto;
             width: 100vw;
             max-width: 500px;
+
             &::-webkit-scrollbar {
                 display: none;
             }
+
             .listItem {
                 .item {
                     background: #FFFFFF;
@@ -193,31 +192,29 @@
                     .wrapper {
                         display: flex;
                         flex-direction: column;
-                        width: 100%;
+                        width: 100vw;
+                        overflow: hidden;
 
                         .touch {
-                            display: flex;
-                            flex-direction: row;
-                            justify-content: space-between;
-                            align-items: center;
+                            touch-action: pan-y!important;
                             width: 100%;
-                            height: 9vh;
-                            border-bottom: 1px solid #EEEDED;;
+                            .touchContent{
+                                transition: all .3s;
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: space-between;
+                                align-items: center;
+                                width: 120vw;
+                                height: 9vh;
+                                border-bottom: 1px solid #EEEDED;;
+                            }
                             .remove {
                                 animation: left .5s;
                                 background: #F75855;
-                                width: 18%;
+                                width: 20vw;
                                 height: 100%;
-                                display: none;
                                 text-align: center;
-                                @keyframes left {
-                                    0% {
-                                        transform: translate(100%, 0)
-                                    }
-                                    100% {
-                                        transform: translate(0, 0)
-                                    }
-                                }
+
                                 div {
                                     color: #FFFFFF;
                                     font-size: 14px;
@@ -230,11 +227,12 @@
                             }
 
                             .notes {
-                                width: 50%;
+                                width: 50vw;
                                 display: flex;
                                 flex-wrap: wrap;
                                 color: #808080;
                                 overflow: auto;
+
                                 &::-webkit-scrollbar {
                                     display: none;
                                 }
@@ -245,14 +243,14 @@
                                 display: flex;
                                 justify-content: flex-end;
                                 align-items: center;
-                                width: 20%;
+                                width: 20vw;
                                 padding-right: 15px;
 
                             }
 
                             .tagName {
                                 display: flex;
-                                width: 30%;
+                                width: 30vw;
                                 justify-content: flex-start;
                                 align-items: center;
                                 white-space: nowrap;
@@ -340,13 +338,13 @@
                 justify-content: space-between;
                 align-items: center;
                 background: #5EBF8A;
-                height: 4.5vh;
+                height: 5vh;
                 width: 150px;
                 font-size: 16px;
                 white-space: nowrap;
                 border-radius: 3px;
                 margin-left: 10px;
-                margin-top: 8px;
+                margin-top: 1vh;
 
                 .zhi {
                     padding: 0 16px 0 20px;
@@ -367,16 +365,21 @@
                 display: flex;
                 flex-direction: row;
                 overflow: auto;
-                flex-grow: 1;
+                position: relative;
+
                 &::-webkit-scrollbar {
                     display: none;
                 }
 
                 .type {
-                    height: 100%;
+                    height: 6vh;
                     white-space: nowrap;
-                    padding: 2vh 4vw 0;
+                    padding: 0 4vw;
+                    display: flex;
+                    align-items: center;
                     text-align: center;
+                    border-bottom: 3px solid transparent;
+                    border-top: 3px solid transparent;
 
                     &.selected {
                         border-bottom: 3px solid #0E351A;

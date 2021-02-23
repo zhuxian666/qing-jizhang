@@ -5,6 +5,7 @@
             <Notes :value.sync="record.notes" :cleal="clear"/>
             <number-pad :type="record.type" @submit="submit"
                         :value.sync="record.amount"/>
+            <Toast v-if="clear">已保存</Toast>
       </Layout>
 </template>
 
@@ -14,8 +15,9 @@
   import NumberPad from '@/components/NumberPad.vue';
   import Type from '@/components/Type.vue';
   import Notes from '@/components/Notes.vue';
+  import Toast from '@/components/Toast.vue';
   @Component({
-        components: {Notes, Type, NumberPad}
+        components: {Toast, Notes, Type, NumberPad}
   })
   export default class Money extends Vue {
         get record(){
@@ -31,6 +33,9 @@
            this.$store.commit('createdRecordList',this.record)
            this.record.notes=''
            this.clear=true
+           setTimeout(()=>{
+                 this.clear=false
+           },1000)
      }
   }
 </script>
