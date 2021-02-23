@@ -14,38 +14,38 @@
 
 二维码
 
-![记账](./src/assets/qingjzweb.png)
+![轻记账](https://github.com/zhuxian666/qing-jizhang/src/assets/qingjzweb.png)
 ## 功能介绍
 
 ### 1.记账
 
 可以急速记账，选择支出收入，还有多种标签以供选择，并且可以点击编辑来新增标签。
 
-![记账](./src/assets/jz.jpg)
+![记账](https://github.com/zhuxian666/qing-jizhang/src/assets/jz.jpg)
 
 ### 2.标签管理
 
 可以删除不喜欢的标签
 
-![标签管理](./src/assets/biaoqian.jpg)
+![标签管理](https://github.com/zhuxian666/qing-jizhang/src/assets/biaoqian.jpg)
 
 ### 3.新增标签
 
 可以根据自己喜好随意新增标签
 
-![标签管理](./src/assets/xinzeng.jpg)
+![新增标签](https://github.com/zhuxian666/qing-jizhang/src/assets/xinzeng.jpg)
 
 ### 4.明细
 
 明细界面可以查看收支详情，并且可以根据标签筛选。还可以删除所记的款项。
 
-![标签管理](./src/assets/mingxi.jpg)
-![标签管理](./src/assets/shanchu.jpg)
+![明细](https://github.com/zhuxian666/qing-jizhang/src/assets/mingxi.jpg)
+![明细](https://github.com/zhuxian666/qing-jizhang/src/assets/shanchu.jpg)
 
 ### 5.统计
 
 可以根据您的收支所进行详细的统计，来反映您的消费习惯，可以进行每日对比，每月对比，
 可以为您制作出消费排行榜更加直观看出您的消费习惯
 
-![标签管理](./src/assets/tongji%20.jpg)
-![标签管理](./src/assets/paiming.jpg)
+![统计](https://github.com/zhuxian666/qing-jizhang/src/assets/tongji%20.jpg)
+![统计](https://github.com/zhuxian666/qing-jizhang/src/assets/paiming.jpg)
