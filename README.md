@@ -1,7 +1,6 @@
 # 轻记账
 
 一个简单好用的记账应用。
-
 ## 项目简介
 
 这是我在学习Vue时所作的一个记账应用，使用方便，简洁，希望可以帮助到你。
@@ -40,6 +39,7 @@
 明细界面可以查看收支详情，并且可以根据标签筛选。还可以删除所记的款项。
 
 ![明细](https://github.com/zhuxian666/qing-jizhang/blob/main/src/assets/mingxi.jpg)
+
 ![明细](https://github.com/zhuxian666/qing-jizhang/blob/main/src/assets/shanchu.jpg)
 
 ### 5.统计
@@ -48,4 +48,5 @@
 可以为您制作出消费排行榜更加直观看出您的消费习惯
 
 ![统计](https://github.com/zhuxian666/qing-jizhang/blob/main/src/assets/tongji%20.jpg)
+
 ![统计](https://github.com/zhuxian666/qing-jizhang/blob/main/src/assets/paiming.jpg)
